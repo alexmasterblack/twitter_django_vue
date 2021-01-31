@@ -1,1 +1,1 @@
-web: gunicorn appname.wsgi --log-file -
+web: gunicorn twitter_django_vue.wsgi --log-file -
