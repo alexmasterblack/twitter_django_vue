@@ -1,0 +1,65 @@
+{% extends 'base/base.html' %}
+
+{% load humanize %}
+
+{% block content %}
+    <div class="container">
+        <div class="columns">
+            <div class="column is-12">
+                <h1 class="title">{{ user.username }}</h1>
+                <h2><a href="{% url 'settings_user' user.username %}">Edit Profile</a></h2>
+                {% if user.user_profile.avatar %}
+                    <img class="imag_profile" alt="" src="{{ user.user_profile.avatar.url }}"
+                         style="height: 128px; width: 128px;">
+                {% endif %}
+                <div class="collection">
+                    <a href="{% url 'followers' user.username %}" class="collection-item">
+                        <span class="badge">{{ user.user_profile.followed_by.count }}</span>
+                        Followers
+                    </a>
+                    <a href="{% url 'follows' user.username %}" class="collection-item">
+                        <span class="badge">{{ user.user_profile.follows.count }}</span>
+                        Follows
+                    </a>
+                </div>
+                {% if user != request.user %}
+                    {% if request.user.user_profile in user.user_profile.followed_by.all %}
+                        <a href="{% url 'do_unfollow' user.username %}" class="waves-effect waves-light red btn">Unfollow</a>
+                    {% else %}
+                        <a href="{% url 'do_follow' user.username %}" class="waves-effect waves-light btn">Follow</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column is-8">
+                <div class="wrapper-tweet">
+                    {% for tweet in user.tweets.all %}
+                        <div class="tweet">
+                            <article class="row valign-wrapper">
+                                <figure class="col s2">
+                                    <p>
+                                        {% if user.user_profile.avatar %}
+                                            <img width="128px" height="128px" alt="" class="circle"
+                                                 src="{{ user.user_profile.avatar.url }}">
+                                        {% endif %}
+                                    </p>
+                                </figure>
+                                <div class="col s10">
+                                    <div class="content">
+                                        <p>
+                                            <strong>{{ tweet.created_by.username }}</strong>
+                                            <small>{{ tweet.created_at|naturaltime }}</small>
+                                            <br>
+                                            {{ tweet.body }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

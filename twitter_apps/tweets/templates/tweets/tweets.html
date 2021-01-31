@@ -1,0 +1,112 @@
+{% extends 'base/base.html' %}
+
+{% load humanize %}
+
+{% block content %}
+    <div class="container" id="app">
+        <form v-on:submit.prevent="CreateTweet()" class="col s12">
+            <div class="row">
+                <div class="input-field col s11">
+                    <i class="material-icons prefix">mode_edit</i>
+                    <textarea id="textarea2" class="materialize-textarea" v-model="body" data-length="10"></textarea>
+                    <label for="textarea2">Write here</label>
+                </div>
+                <div class="input-field col s1">
+                    <button id="btn" class="btn-floating btn-large pulse"><i class="material-icons">send</i></button>
+                </div>
+            </div>
+        </form>
+        <div class="wrapper-tweet-meow">
+            {% for tweet in tweets %}
+                <div class="tweet">
+                    <article class="row valign-wrapper">
+                        <figure class="col s2">
+                            <p>
+                                {% if tweet.created_by.user_profile.avatar %}
+                                    <img width="128px" height="128px" alt="" class="circle"
+                                         src="{{ tweet.created_by.user_profile.avatar.url }}">
+                                {% endif %}
+                            </p>
+                        </figure>
+                        <div class="col s10">
+                            <div class="content">
+                                <p>
+                                    <strong>{{ tweet.created_by.username }}</strong>
+                                    <small>{{ tweet.created_at|naturaltime }}</small>
+                                    <br>
+                                    {{ tweet.body }}
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            {% endfor %}
+            <div class="tweet" v-for="tweet in tweets">
+                <article class="row valign-wrapper">
+                    <figure class="col s2">
+                        <p>
+                            <img width="128px" height="128px" class="circle" alt="" :src="tweet.avatar">
+                        </p>
+                    </figure>
+                    <div class="col s10">
+                        <div class="content">
+                            <p>
+                                <strong>[[ tweet.by_user ]]</strong>
+                                <small>[[ tweet.created_at ]]</small>
+                                <br>
+                                [[ tweet.body ]]
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        new Vue({
+            el: '#app',
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    tweets: [],
+                    body: '',
+                    by_user: '{{ request.user.username }}',
+                    created_at: 'Now',
+                    avatar: '{% if request.user.meowprofile.avatar %}{{ request.user.meowprofile.avatar.url }} {% endif %}',
+                }
+            },
+            methods: {
+                CreateTweet() {
+                    if (this.body.length > 0) {
+                        let new_tweet = {
+                            'body': this.body,
+                            'by_user': this.by_user,
+                            'created_at': this.created_at
+                        };
+                        this.tweets.unshift(new_tweet);
+
+                        fetch('/api/new_tweet/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            credentials: 'same-origin',
+                            body: JSON.stringify(new_tweet)
+                        })
+                    }
+                    this.body = '';
+                }
+            }
+        })
+    </script>
+    <script>
+        M.textareaAutoResize($('#textarea2'));
+        $(document).ready(function () {
+            $('input#input_text, textarea#textarea2').CharacterCounter(150);
+        });
+    </script>
+{% endblock %}

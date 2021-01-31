@@ -1,0 +1,27 @@
+body {
+    background: #f9f9f9;
+}
+
+.wrapper-tweet {
+    margin-top: 30px;
+}
+
+.wrapper-tweet .tweet {
+    margin-bottom: 10px;
+    padding: 20px;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.wrapper-tweet .tweet .name {
+    font-weight: bold;
+}
+
+.wrapper-tweet .tweet .info {
+    font-size: 12px;
+    color: #aaa;
+}
+
+#btn:active {
+  outline: none;
+}

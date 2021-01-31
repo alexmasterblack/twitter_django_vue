@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="columns">
+            <div class="column is-12">
+                <h1 class="title">Login</h1>
+                <form action="." method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="waves-effect waves-light btn" type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
