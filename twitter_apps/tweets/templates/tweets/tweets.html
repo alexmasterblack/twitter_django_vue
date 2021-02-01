@@ -16,7 +16,26 @@
                 </div>
             </div>
         </form>
-        <div class="wrapper-tweet-meow">
+        <div class="wrapper-tweet">
+            <div class="tweet" v-for="tweet in tweets">
+                <article class="row valign-wrapper">
+                    <figure class="col s2">
+                        <p>
+                            <img width="128px" height="128px" class="circle" alt="" :src="tweet.avatar">
+                        </p>
+                    </figure>
+                    <div class="col s10">
+                        <div class="content">
+                            <p>
+                                <strong>[[ tweet.by_user ]]</strong>
+                                <small>[[ tweet.created_at ]]</small>
+                                <br>
+                                [[ tweet.body ]]
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </div>
             {% for tweet in tweets %}
                 <div class="tweet">
                     <article class="row valign-wrapper">
@@ -41,25 +60,6 @@
                     </article>
                 </div>
             {% endfor %}
-            <div class="tweet" v-for="tweet in tweets">
-                <article class="row valign-wrapper">
-                    <figure class="col s2">
-                        <p>
-                            <img width="128px" height="128px" class="circle" alt="" :src="tweet.avatar">
-                        </p>
-                    </figure>
-                    <div class="col s10">
-                        <div class="content">
-                            <p>
-                                <strong>[[ tweet.by_user ]]</strong>
-                                <small>[[ tweet.created_at ]]</small>
-                                <br>
-                                [[ tweet.body ]]
-                            </p>
-                        </div>
-                    </div>
-                </article>
-            </div>
         </div>
     </div>
 {% endblock %}
@@ -75,7 +75,7 @@
                     body: '',
                     by_user: '{{ request.user.username }}',
                     created_at: 'Now',
-                    avatar: '{% if request.user.meowprofile.avatar %}{{ request.user.meowprofile.avatar.url }} {% endif %}',
+                    avatar: '{% if request.user.user_profile.avatar %}{{ request.user.user_profile.avatar.url }} {% endif %}',
                 }
             },
             methods: {
@@ -84,10 +84,10 @@
                         let new_tweet = {
                             'body': this.body,
                             'by_user': this.by_user,
-                            'created_at': this.created_at
+                            'created_at': this.created_at,
+                            'avatar': this.avatar,
                         };
                         this.tweets.unshift(new_tweet);
-
                         fetch('/api/new_tweet/', {
                             method: 'POST',
                             headers: {
