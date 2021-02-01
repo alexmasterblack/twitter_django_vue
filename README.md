@@ -1,1 +1,5 @@
-# twitter_django_vue
+# Что-то похожее на твиттер, регистрация, создание твита
+
+## Выполнено [Уткиным Данилом](https://github.com/DanilKlukanov) и [Клюкановой Дианой](https://github.com/alexmasterblack)
+## Б8119-01.03.02систпро
+## [Deploy on Heroku](https://twitter-django-vue.herokuapp.com/)
