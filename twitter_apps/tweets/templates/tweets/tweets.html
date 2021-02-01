@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% load humanize %}
+{% load static %}
 
 {% block content %}
     <div class="container" id="app">
@@ -8,7 +9,8 @@
             <div class="row">
                 <div class="input-field col s11">
                     <i class="material-icons prefix">mode_edit</i>
-                    <textarea id="textarea2" class="materialize-textarea" v-model="body" data-length="10"></textarea>
+                    <textarea id="textarea2" class="materialize-textarea" v-model="body" data-length="10"
+                              maxlength="255"></textarea>
                     <label for="textarea2">Write here</label>
                 </div>
                 <div class="input-field col s1">
@@ -20,13 +22,15 @@
             <div class="tweet" v-for="tweet in tweets">
                 <article class="row valign-wrapper">
                     <figure class="col s2">
-                        <p>
-                            <img width="128px" height="128px" class="circle" alt="" :src="tweet.avatar">
+                        <p style="margin-left: 20px; margin-bottom: 0;">
+                            <a href="{% url 'user_profile' request.user.username %}"><img width="128px" height="128px"
+                                                                                          class="circle" alt=""
+                                                                                          :src="tweet.avatar"></a>
                         </p>
                     </figure>
                     <div class="col s10">
                         <div class="content">
-                            <p>
+                            <p style="word-wrap: break-word; width: 700px;">
                                 <strong>[[ tweet.by_user ]]</strong>
                                 <small>[[ tweet.created_at ]]</small>
                                 <br>
@@ -40,16 +44,19 @@
                 <div class="tweet">
                     <article class="row valign-wrapper">
                         <figure class="col s2">
-                            <p>
+                            <p style="margin-left: 20px; margin-bottom: 0;">
                                 {% if tweet.created_by.user_profile.avatar %}
-                                    <img width="128px" height="128px" alt="" class="circle"
-                                         src="{{ tweet.created_by.user_profile.avatar.url }}">
+                                    <a href="{% url 'user_profile' tweet.created_by.username %}"><img width="128px"
+                                                                                                      height="128px"
+                                                                                                      alt=""
+                                                                                                      class="circle"
+                                                                                                      src="{{ tweet.created_by.user_profile.avatar.url }}"></a>
                                 {% endif %}
                             </p>
                         </figure>
                         <div class="col s10">
                             <div class="content">
-                                <p>
+                                <p style="word-wrap: break-word; width: 700px;">
                                     <strong>{{ tweet.created_by.username }}</strong>
                                     <small>{{ tweet.created_at|naturaltime }}</small>
                                     <br>
@@ -75,7 +82,7 @@
                     body: '',
                     by_user: '{{ request.user.username }}',
                     created_at: 'Now',
-                    avatar: '{% if request.user.user_profile.avatar %}{{ request.user.user_profile.avatar.url }} {% endif %}',
+                    avatar: '{% if request.user.user_profile.avatar %}{{ request.user.user_profile.avatar.url }}{% endif %}',
                 }
             },
             methods: {

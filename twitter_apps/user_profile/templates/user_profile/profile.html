@@ -6,13 +6,20 @@
     <div class="container">
         <div class="columns">
             <div class="column is-12">
-                <h1 class="title">{{ user.username }}</h1>
-                <h2><a href="{% url 'settings_user' user.username %}">Edit Profile</a></h2>
-                {% if user.user_profile.avatar %}
-                    <img class="imag_profile" alt="" src="{{ user.user_profile.avatar.url }}"
-                         style="height: 128px; width: 128px;">
-                {% endif %}
+                <div class="row">
+                    {% if user.user_profile.avatar %}
+                        <img class="circle col s6" alt="" src="{{ user.user_profile.avatar.url }}"
+                             style="height: 128px; width: 148px; margin-left: 20px; margin-top: 10px">
+                    {% endif %}
+                    <h2 class="col s6" style="padding-left: 20px;">{{ user.username }}</h2>
+                </div>
+
                 <div class="collection">
+                    {% if user == request.user %}
+                        <a href="{% url 'settings_user' user.username %}" class="collection-item">
+                            Settings
+                        </a>
+                    {% endif %}
                     <a href="{% url 'followers' user.username %}" class="collection-item">
                         <span class="badge">{{ user.user_profile.followed_by.count }}</span>
                         Followers
@@ -38,7 +45,7 @@
                         <div class="tweet">
                             <article class="row valign-wrapper">
                                 <figure class="col s2">
-                                    <p>
+                                    <p style="margin-left: 20px; margin-bottom: 0;">
                                         {% if user.user_profile.avatar %}
                                             <img width="128px" height="128px" alt="" class="circle"
                                                  src="{{ user.user_profile.avatar.url }}">
@@ -47,7 +54,7 @@
                                 </figure>
                                 <div class="col s10">
                                     <div class="content">
-                                        <p>
+                                        <p style="word-wrap: break-word; width: 700px;">
                                             <strong>{{ tweet.created_by.username }}</strong>
                                             <small>{{ tweet.created_at|naturaltime }}</small>
                                             <br>
